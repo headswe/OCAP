@@ -93,6 +93,27 @@ _sT = diag_tickTime;
 } forEach (allUnits + allDead + (entities "LandVehicle") + (entities "Ship") + (entities "Air"));
 
 
+
+{
+    if((markerShape _x) == "ICON") then {
+        ocap_main_markers pushBackUnique _x;
+        ocap_main_markersData pushBack [_x,ocap_main_FrameNo,getMarkerPos _x, markerType _x,markerText _x,markerColor _x,true];
+    };
+} foreach (allMapMarkers - ocap_main_markers);
+
+
+{
+    ocap_main_markers = ocap_main_markers - [_x];
+    ocap_main_markersData pushBack [_x,ocap_main_FrameNo,false]; // remove
+} foreach ocap_main_markers - allMapMarkers;
+
+
+
+
+
+
+
+
 _string = format["Captured frame %1 (%2ms).", ocap_main_FrameNo, (diag_tickTime - _sT)*1000];
 if (ocap_main_debug) then {
 	systemChat _string;

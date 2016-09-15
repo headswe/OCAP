@@ -15,6 +15,15 @@ ocap_main_eventsData = []; // Data on all events (involving 2+ units) that occur
 ocap_main_FrameNo = 0; // Frame number for current capture
 ocap_main_endFrameNo = 0; // Frame number at end of mission
 ocap_main_id = 0; // ID assigned to each entity (auto increments). Also acts as an index for each entity in entitiesData.
+ocap_main_markers = [];
+ocap_main_markersData = [];
+
+{
+    if((markerShape _x) == "ICON" && !(_x in ocap_main_markers)) then {
+        ocap_main_markers pushBackUnique _x;
+        ocap_main_markersData pushBack [_x,ocap_main_FrameNo,getMarkerPos _x, markerType _x,markerText _x,markerColor _x,true];
+    };
+} foreach allMapMarkers;
 
 // Add mission EHs
 addMissionEventHandler ["EntityKilled", {

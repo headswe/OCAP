@@ -216,6 +216,41 @@ _jsonEvents = ',"events":[';
 } forEach ocap_main_eventsData;
 [_jsonEvents, true] call ocap_fnc_callExtension;
 
+[']', true] call ocap_fnc_callExtension; // End of JSON file
+
+_jsonMarkers = ',"markers":[';
+{
+    /// ocap_main_markersData pushBack [_x,ocap_main_FrameNo, markerType _x,markerText _x,true]; // add
+    // name,frame,type,text,color,created/deleted
+    _action = _x select (count _x - 1);
+    if(_action) then {
+        _x params ["_name","_pos","_frame","_type","_text","_color"];
+        _jsonMarkers = _jsonMarkers + format['
+            ["%1",%2,%3,"%4","%5","%6",%7]', _name,_pos, _frame, _type, _text,(getArray (configFile >> "CfgMarkerColors" >> _color >> "color") call BIS_fnc_colorConfigToRGBA) call BIS_fnc_colorRGBAtoHTML,_action];
+    }
+    else {
+        _x params ["_name","_frame"];
+        _jsonMarkers = _jsonMarkers + format['
+            ["%1",%2,%3]', _name, _frame,_action];
+    };
+
+
+
+    if (_forEachIndex != ((count ocap_main_markersData)-1)) then {_jsonMarkers = _jsonMarkers + ","};
+
+    if ((count _jsonMarkers) >= _bufferSize) then {
+        [_jsonMarkers, true] call ocap_fnc_callExtension;
+        _jsonMarkers = "";
+    };
+} foreach ocap_main_markersData;
+[_jsonMarkers, true] call ocap_fnc_callExtension;
+
+
+
+
+
+
+
 [']}', true] call ocap_fnc_callExtension; // End of JSON file
 ['', false] call ocap_fnc_callExtension;
 
